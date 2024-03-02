@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/gommon/log"
 )
 
 func Home_GET(c echo.Context) error {
@@ -45,8 +44,7 @@ func Login_POST(c echo.Context) error {
 
 func Logout_POST(c echo.Context) error {
 
-	s, ok := c.Get("session").(models.Session)
-	log.Info(s)
+	_, ok := c.Get("session").(models.Session)
 	if ok {
 		c.SetCookie(&http.Cookie{
 			Name:    "session_token",
