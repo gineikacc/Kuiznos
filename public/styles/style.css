@@ -1,0 +1,34 @@
+:root{
+    --color1: #756AB6;
+    --color2: #AC87C5;
+    --color3: #E0AED0;
+    --color4: #FFE5E5;
+}
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+img{
+
+}
+
+body{
+    font-family:'Courier New', Courier, monospace;
+    background-color: var(--color4);
+    text-align: center;
+    font-size: 24px;
+}
+
+#main{
+    background-color: var(--color3);
+    display: flex;
+    flex-direction: column;
+
+}
+
+button{
+    color: white;
+    background-color: var(--color1);
+ border: 2px solid black;
+}

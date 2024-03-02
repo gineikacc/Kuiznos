@@ -1,0 +1,16 @@
+{{define "form"}}
+    <h2>Login form</h2>
+    <form hx-post="login" hx-trigger="submit">
+      <label for="nameInput"> Name: </label>
+      <input type="text" name="name" id="nameInput" />
+      <br />
+      <label for="emailInput"> Email: </label>
+      <input type="email" name="email" id="emailInput" />
+      <br />
+      <label for="passwordInput"> Password: </label>
+      <input type="password" name="password" id="passwordInput" />
+      <br />
+      <input type="submit" value="Submit" />
+    </form>
+    <div id="responseData"></div>
+{{end}}

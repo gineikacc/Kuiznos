@@ -1,0 +1,16 @@
+{{define "index"}}
+
+{{template "wrapperTop" .}}
+<h1>ViKKKtorina</h1>
+{{if .session_token}}
+  <button hx-post="/logout" hx-target="body">Log out</button>
+  {{else}}
+  <button hx-get="/login" hx-target="#main">Login</button>
+  {{end}} {{if .session_token}}
+  <h4>Youre logged in cousin</h4>
+  {{else}}
+  <h1>BIG YRTOUGDLE OYURE NOGT GLOGGED</h1>
+  {{end}}
+{{template "wrapperBottom" .}}
+
+{{end}}
