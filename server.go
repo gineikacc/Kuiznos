@@ -1,11 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"io"
 	"myapp/handlers"
 	"myapp/models"
 	"myapp/sessions"
+	"os"
 
 	"github.com/labstack/echo/v4"
 )
@@ -24,7 +26,7 @@ func main() {
 	e.POST("/login", handlers.Login_POST)
 	e.POST("/logout", handlers.Logout_POST)
 
-	e.Logger.Fatal(e.Start(":8080"))
+	e.Logger.Fatal(e.Start(fmt.Sprintf(":%n", os.Getenv("PORT"))))
 }
 
 type Template struct {

@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile
     restart: always
     ports: 
-      - 8080:8080
+      - ${APP_PORT}:${APP_PORT}
     environment:
       - APP_PORT=$APP_PORT
       - DB_HOST=$DB_HOST
@@ -21,7 +21,7 @@ services:
     image: mysql
     restart: always
     ports:
-      - 3306:3306
+      - ${DB_PORT}:${DB_PORT}
     environment:
       - MYSQL_ROOT_PASSWORD=$DB_PASS
       - MYSQL_DATABASE=$DB_NAME
