@@ -4,11 +4,13 @@ import (
 	"fmt"
 	"html/template"
 	"io"
+	"log"
 	"myapp/handlers"
 	"myapp/models"
 	"myapp/sessions"
 	"os"
 
+	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 )
 
@@ -25,8 +27,8 @@ func main() {
 	e.GET("/login", handlers.Login_GET)
 	e.POST("/login", handlers.Login_POST)
 	e.POST("/logout", handlers.Logout_POST)
-
-	e.Logger.Fatal(e.Start(fmt.Sprintf(":%v", os.Getenv("APP_PORT"))))
+	port := fmt.Sprintf(":%v", os.Getenv("APP_PORT"))
+	e.Logger.Fatal(e.Start(port))
 }
 
 type Template struct {
@@ -36,4 +38,11 @@ type Template struct {
 // Render implements echo.Renderer.
 func (r Template) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
 	return r.templates.ExecuteTemplate(w, name, data)
+}
+
+// Setting up .env variables
+func init() {
+	if err := godotenv.Load(); err != nil {
+		log.Fatal("Error loading .env file")
+	}
 }
