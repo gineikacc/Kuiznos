@@ -32,6 +32,7 @@ func Login_POST(c echo.Context) error {
 	if user.Name == "airolen11" {
 		cookie := NewCookie()
 		c.SetCookie(cookie)
+		c.SetCookie(&http.Cookie{Name: "name", Value: "airolen11", Expires: cookie.Expires})
 
 		data["name"] = user.Name
 		data["email"] = user.Email

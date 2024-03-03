@@ -26,7 +26,7 @@ func main() {
 	e.POST("/login", handlers.Login_POST)
 	e.POST("/logout", handlers.Logout_POST)
 
-	e.Logger.Fatal(e.Start(fmt.Sprintf(":%n", os.Getenv("APP_PORT"))))
+	e.Logger.Fatal(e.Start(fmt.Sprintf(":%v", os.Getenv("APP_PORT"))))
 }
 
 type Template struct {
