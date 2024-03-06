@@ -3,9 +3,9 @@ package models
 import "time"
 
 type Session struct {
-	Username string
-	ID       string
-	Expiry   time.Time
+	Username      string
+	Session_token string
+	Expiry        time.Time
 }
 
 func (s *Session) IsExpired() bool {

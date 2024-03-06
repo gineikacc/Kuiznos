@@ -1,6 +1,6 @@
 {{define "form"}}
     <h2>Login form</h2>
-    <form hx-post="login" hx-trigger="submit">
+    <form id="loginForm">
       <label for="nameInput"> Name: </label>
       <input type="text" name="name" id="nameInput" />
       <br />
@@ -10,7 +10,8 @@
       <label for="passwordInput"> Password: </label>
       <input type="password" name="password" id="passwordInput" />
       <br />
-      <input type="submit" value="Submit" />
+      <input type="submit" hx-post="login" hx-target="#main" hx-swap="innerHTML" hx-trigger="click" value="Login" />
+      <input type="submit" hx-post="register" hx-target="#main" hx-swap="innerHTML" hx-trigger="click" value="Register" />
     </form>
     <div id="responseData"></div>
 {{end}}

@@ -12,8 +12,11 @@ func SessionMiddleware(sm *models.SessionManager) echo.MiddlewareFunc {
 			sessionToken, err := c.Cookie("session_token")
 			if err == nil {
 				// Session token found, retrieve session from the manager
-				session, _ := sm.GetSession(sessionToken.Value)
-				c.Set("session", session)
+				session, exists := sm.Get_session(sessionToken.Value)
+				if exists {
+					c.Set("session", session)
+					c.Set("authorized", !session.IsExpired())
+				}
 			}
 			return next(c)
 		}

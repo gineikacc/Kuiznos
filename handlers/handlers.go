@@ -1,12 +1,21 @@
 package handlers
 
 import (
+	"fmt"
+	"log"
+	"myapp/auth"
+	"myapp/database"
 	"myapp/models"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/labstack/echo/v4"
 )
+
+var DB database.MysqlStore
+var AUTH auth.Auth
+var SM *models.SessionManager
 
 func Home_GET(c echo.Context) error {
 	data := map[string]interface{}{}
@@ -18,35 +27,50 @@ func Home_GET(c echo.Context) error {
 }
 
 func Login_GET(c echo.Context) error {
+	if c.Get("authorized") != nil {
+		if c.Get("authorized").(bool) {
+			return c.Redirect(http.StatusMovedPermanently, "/")
+		}
+	}
 	return c.Render(http.StatusOK, "form", 0)
 }
 
 func Login_POST(c echo.Context) error {
-	user := new(models.User)
-	if err := c.Bind(user); err != nil {
-		return err
-	}
+	fmt.Println("REE: LOGIN POST")
+	user, _ := read_user_form(c)
+	authorized, _ := AUTH.Auth_with_credentials(*user)
 
-	data := map[string]interface{}{}
-
-	if user.Name == "airolen11" {
-		cookie := NewCookie()
-		c.SetCookie(cookie)
-		c.SetCookie(&http.Cookie{Name: "name", Value: "airolen11", Expires: cookie.Expires})
-
-		data["name"] = user.Name
-		data["email"] = user.Email
-		data["password"] = user.Password
-		data["session_token"] = cookie.Value
+	if authorized {
+		session_token := AUTH.Create_session_token(*user)
+		c.SetCookie(session_token)
 	}
 	return c.Redirect(http.StatusMovedPermanently, "/")
+}
 
+func Register_POST(c echo.Context) error {
+	fmt.Println("REE: REGISTER POST")
+
+	user, _ := read_user_form(c)
+	exists := DB.User_exists(strings.ToLower(user.Name))
+	if exists {
+		log.Fatal(fmt.Errorf("> %v is already registered", user.Name))
+		return c.Redirect(http.StatusMovedPermanently, "/")
+	}
+	err := DB.Create_user(*user)
+	if err == nil {
+		session_token := AUTH.Create_session_token(*user)
+		c.SetCookie(session_token)
+	} else {
+		log.Fatal(err)
+	}
+	return c.Redirect(http.StatusMovedPermanently, "/")
 }
 
 func Logout_POST(c echo.Context) error {
 
-	_, ok := c.Get("session").(models.Session)
+	session, ok := c.Get("session").(*models.Session)
 	if ok {
+		session.Expiry = time.Now().Add(-1 * time.Hour)
 		c.SetCookie(&http.Cookie{
 			Name:    "session_token",
 			Value:   "_",
@@ -54,13 +78,13 @@ func Logout_POST(c echo.Context) error {
 		})
 	}
 	return c.Redirect(http.StatusMovedPermanently, "/")
-
 }
 
-func NewCookie() *http.Cookie {
-	cookie := new(http.Cookie)
-	cookie.Name = "session_token"
-	cookie.Value = "WEOWCOOK"
-	cookie.Expires = time.Now().Add(time.Minute * 2)
-	return cookie
+func read_user_form(c echo.Context) (*models.User, error) {
+	user := new(models.User)
+	if err := c.Bind(user); err != nil {
+		return user, err
+	}
+	user.Password = AUTH.Hash(user.Password)
+	return user, nil
 }

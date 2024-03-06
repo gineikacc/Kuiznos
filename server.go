@@ -5,6 +5,8 @@ import (
 	"html/template"
 	"io"
 	"log"
+	"myapp/auth"
+	"myapp/database"
 	"myapp/handlers"
 	"myapp/models"
 	"myapp/sessions"
@@ -14,10 +16,20 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-var sm = models.NewSessionManager()
-
 func main() {
+	sm := models.NewSessionManager()
 	e := echo.New()
+	db := database.New()
+	a := auth.New(db, sm)
+	handlers.DB = db
+	handlers.AUTH = a
+	handlers.SM = sm
+	err := db.Setup()
+	if err != nil {
+		log.Fatalf("%+v", err)
+	}
+	// db.AddUser(models.User{Name: "Igor", Password: "Putinhuilo42", Email: "ro@mail.ru"})
+
 	e.Static("/css", "public/styles")
 	e.Use(sessions.SessionMiddleware(sm))
 	renderer := Template{templates: template.Must(template.ParseGlob("public/views/*.html"))}
@@ -26,6 +38,7 @@ func main() {
 	e.GET("/", handlers.Home_GET)
 	e.GET("/login", handlers.Login_GET)
 	e.POST("/login", handlers.Login_POST)
+	e.POST("/register", handlers.Register_POST)
 	e.POST("/logout", handlers.Logout_POST)
 	port := fmt.Sprintf(":%v", os.Getenv("APP_PORT"))
 	e.Logger.Fatal(e.Start(port))
