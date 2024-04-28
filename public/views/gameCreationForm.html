@@ -1,12 +1,12 @@
 {{define "gameCreationForm"}}
 <h3>Create a quiz</h3>
-<form hx-post="addgame" hx-target="#content"  hx-swap="innerHTML">
-
+<form hx-post="addgame" hx-target="#main" hx-swap="innerHTML" id="addGame">
+    <input type="text" style="display: none;" name="quiz" id="addQuizJSON">
     <label for="title">Quiz title</label>
-    <input type="text" name="title" id="title" />
+    <input type="text" id="addQuizTitle" />
     {{template "questionEntry" .}}
     <div id="quizQuestions"></div>
     <button hx-get="hx-questionEntry" hx-target="#quizQuestions" hx-swap="beforebegin">Add a question</button>
-    <button type="submit">Submit</button>
+    <button type="submit" onclick="prepAddGame()">Submit</button>
 </form>
 {{end}}

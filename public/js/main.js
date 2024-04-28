@@ -1,83 +1,105 @@
+let quiz = {};
+let questionIdx = -1;
+let correctGuesses = -1;
+
 function startGame(){
-    
+    let game = document.getElementById("game");
+    let gameEndScreen = document.getElementById("gameEndScreen");
+    game.style.display = "inherit";
+    gameEndScreen.style.display = "none";
 
-
-let quiz = {
-    "id": 101,
-    "title": "Capitals",
-    "author": "One Guy",
-    "questions": [
-        {"id": 101,
-        "title": "Italy",
-        "choices": [
-            {
-                "id": 101,
-                "title": "Rome",
-                "correct": true
-            },
-            {
-                "id": 101,
-                "title": "London",
-                "correct": false
-            },
-            {
-                "id": 101,
-                "title": "Athens",
-                "correct": false
-            },
-            {
-                "id": 101,
-                "title": "Oslo",
-                "correct": false
-            }
-        ]
-    } ,
-    {"id": 101,
-        "title": "Sweden",
-        "choices": [
-            {
-                "id": 101,
-                "title": "Rome",
-                "correct": false
-            },
-            {
-                "id": 101,
-                "title": "London",
-                "correct": false
-            },
-            {
-                "id": 31,
-                "title": "Athens",
-                "correct": false
-            },
-            {
-                "id": 101,
-                "title": "Oslo",
-                "correct": true
-            }
-        ]
-    }
-    ]
-};
-
-
+    questionIdx = 0;
+    correctGuesses = 0;
+    let gameTitle = document.getElementById("gameTitle");
+    gameTitle.innerHTML = quiz.title;
+    setupQuestion()
 }
 
-// type Quiz struct {
-// 	Id        int               `form:"id" json:"id"`
-// 	Title     string            `form:"title" json:"title"`
-// 	Author    string            `form:"author" json:"author"`
-// 	Questions []*Question_entry `form:"questions" json:"questions"`
-// }
+function setupQuestion(){
+    let answers = document.getElementById("answers");
+    let qTitle = document.getElementById("gameQuestionTitle");
+    
+    if (questionIdx < quiz.questions.length) {
+        qTitle.innerHTML = quiz.questions[questionIdx].title;
+        answers.innerHTML = '';
+        let i = 0;
+        for (const answer of quiz.questions[questionIdx].choices) {
+            let answerButton = document.createElement('button');
+            answers.appendChild(answerButton);
+            answerButton.innerHTML = answer.title;
+            answerButton.onclick = ( (x) => () => {answerQuestion(x);} )(i);
+            i++;
+        }
+    } else {
+        endGame();
+    }
+}
 
-// type Question_entry struct {
-// 	Id      int                `form:"id" json:"id"`
-// 	Title   string             `form:"title" json:"title"`
-// 	Choices []*Question_choice `form:"choices" json:"choices"`
-// }
+function answerQuestion(idx){
+    let i = parseInt(idx);
+    if (quiz.questions[questionIdx].choices[i].correct) {
+        correctGuesses++;
+    }
+    setupQuestion(++questionIdx);
+}
 
-// type Question_choice struct {
-// 	Id         int    `form:"id" json:"id"`
-// 	Title      string `form:"title" json:"title"`
-// 	Is_correct bool   `form:"correct" json:"correct"`
+function endGame(){
+    let game = document.getElementById("game");
+    let gameEndScreen = document.getElementById("gameEndScreen");
+    let gameEndScore = document.getElementById("gameEndScore");
+    gameEndScore.innerHTML = `You got ${correctGuesses} of ${quiz.questions.length} correct.`;
+    game.style.display = "none";
+    gameEndScreen.style.display = "block";
 
+    try{
+        fetch("gameEnd");
+    }catch(ex){
+        
+    }
+}
+
+async function loadGame(title){
+    let response = await fetch("game?" + new URLSearchParams({
+        title:title
+    }));
+    let gameQuiz = await response.json();
+    quiz = gameQuiz;
+    questionIdx = 0;
+}
+
+function prepAddGame(){
+    let quiz = quizEntryToJSON();
+    let str = JSON.stringify(quiz);
+    document.getElementById("addQuizJSON").value = str;
+}
+
+function quizEntryToJSON(){
+   let quizTitle = document.getElementById("addQuizTitle").value;
+    let questionDIVs = document.getElementsByClassName("questionEntryCard");
+
+    let quiz = {
+        title: quizTitle,
+        questions: []
+    };
+
+    for (const q of questionDIVs) {
+        let questionTitle = q.querySelector('input[type="text"]').value;
+        let question = {
+            title: questionTitle,
+            choices: []
+        };
+        let answerDIVs = q.getElementsByClassName("addQuestionAnswer");
+        for (const a of answerDIVs) {
+
+            let text = a.querySelector('input[type="text"]').value;
+            let isCorrect = a.querySelector('input[type="checkbox"]').checked;
+            let answer = {
+                title: text,
+                correct: isCorrect
+            }
+            question.choices.push(answer);
+        }
+        quiz.questions.push(question);
+    }
+    return quiz;
+}

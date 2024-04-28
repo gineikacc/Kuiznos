@@ -30,15 +30,17 @@ func main() {
 	}
 
 	e.Static("/css", "public/styles")
+	e.Static("/js", "public/js")
 	e.Use(sessions.SessionMiddleware(sm))
 	renderer := Template{templates: template.Must(template.ParseGlob("public/views/*.html"))}
 	e.Renderer = renderer
 
 	e.GET("/", handlers.Home_GET)
-	e.GET("/test", handlers.TEST)
-	e.POST("/test", handlers.TESTJSON)
 	e.GET("/search", handlers.Search_GET)
 	e.GET("/login", handlers.Login_GET)
+	e.GET("/play", handlers.PlayGET)
+	e.GET("/game", handlers.GameGET)
+	e.GET("/gameEnd", handlers.GameEndGET)
 	e.POST("/addgame", handlers.CreateGame_POST)
 	e.POST("/login", handlers.Login_POST)
 	e.POST("/register", handlers.Register_POST)

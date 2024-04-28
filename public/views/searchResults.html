@@ -7,11 +7,11 @@
       <th>Play</th>
     </thead>
     <tbody>
-      {{range .}}
+     {{range .}}
       <tr>
         <td>{{ .Title }}</td>
         <td>{{ .Author }}</td>
-        <td><button disabled="disabled">Play</button></td>
+        <td><button hx-get="play" hx-target="#content"  hx-swap="innerHTML" hx-on::after-request="startGame()" onclick="loadGame('{{ .Title }}')">Play</button></td>
       </tr>
       {{end}}
     </tbody>

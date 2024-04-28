@@ -115,7 +115,7 @@ func (store MysqlStore) Read_user(name string) (models.User, error) {
 }
 func (store MysqlStore) Increment_user_quiz_done_count(name string) error {
 	//Add user to db
-	q := `UPDATE customer SET quiz_done_count = quiz_done_count + 1 WHERE customer.username = "?";`
+	q := `UPDATE customer SET quiz_done_count = quiz_done_count + 1 WHERE customer.username = ? ;`
 	_, err := store.d.Exec(q, name)
 	if err != nil {
 
