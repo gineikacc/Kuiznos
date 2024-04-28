@@ -1,0 +1,15 @@
+{{define "navigation"}}
+<nav id="navigation">
+    <div>
+      <span id="username">{{.username}}</span>
+    <button id="add" hx-get="hx-create" hx-target="#content"  hx-swap="innerHTML">Add</button>
+    </div>
+    <div class="flex">
+      <form  hx-get="search" hx-target="#content"  hx-swap="innerHTML">
+          <input type="text" name="query" id="query" />
+          <button type="submit">Search</button>
+        </form>
+        <button hx-post="logout" hx-target="#main"  hx-swap="innerHTML">Log out</button>
+    </div>
+  </nav>
+{{end}}

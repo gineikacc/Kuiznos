@@ -1,0 +1,19 @@
+{{define "searchResults"}}
+  <h3 id="tableTitle">Query</h3>
+  <table>
+    <thead>
+      <th>Title</th>
+      <th>Author</th>
+      <th>Play</th>
+    </thead>
+    <tbody>
+      {{range .}}
+      <tr>
+        <td>{{ .Title }}</td>
+        <td>{{ .Author }}</td>
+        <td><button disabled="disabled">Play</button></td>
+      </tr>
+      {{end}}
+    </tbody>
+  </table>
+{{end}}

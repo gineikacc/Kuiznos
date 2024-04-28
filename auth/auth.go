@@ -23,7 +23,7 @@ func New(store database.MysqlStore, sm *models.SessionManager) Auth {
 }
 
 func (a Auth) Auth_with_credentials(user models.User) (bool, error) {
-	db_user, err := a.DB.ReadUser(user.Name)
+	db_user, err := a.DB.Read_user(user.Name)
 
 	if err == nil {
 		if strings.EqualFold(user.Password, db_user.Password) {
@@ -37,7 +37,7 @@ func (a Auth) Auth_with_credentials(user models.User) (bool, error) {
 }
 func (a Auth) Auth_with_session(session_cookie http.Cookie) (bool, error) {
 	session, exists := a.SM.Get_session(session_cookie.Value)
-	if !exists || session.IsExpired() {
+	if !exists || session.Is_expired() {
 		return false, errors.New("session cookie mismatch")
 	}
 	return true, nil

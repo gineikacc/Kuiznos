@@ -1,16 +1,10 @@
 {{define "index"}}
-
 {{template "wrapperTop" .}}
-<h1>Kuiznos</h1>
-{{if .session_token}}
-  <button hx-post="/logout" hx-target="body">Log out</button>
+  <h1>Kuiznos</h1>
+  {{if .authorized}}
+    {{template "dash" .}}
   {{else}}
-  <button hx-get="/login" hx-target="#main">Login</button>
-  {{end}} {{if .session_token}}
-  <h4>Hello, {{.name}}</h4>
-  {{else}}
-  <h4>You have to log in</h4>
-  {{end}}
+    {{template "auth" .}}
+  {{end}} 
 {{template "wrapperBottom" .}}
-
 {{end}}

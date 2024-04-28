@@ -28,7 +28,6 @@ func main() {
 	if err != nil {
 		log.Fatalf("%+v", err)
 	}
-	// db.AddUser(models.User{Name: "Igor", Password: "Putinhuilo42", Email: "ro@mail.ru"})
 
 	e.Static("/css", "public/styles")
 	e.Use(sessions.SessionMiddleware(sm))
@@ -36,10 +35,16 @@ func main() {
 	e.Renderer = renderer
 
 	e.GET("/", handlers.Home_GET)
+	e.GET("/test", handlers.TEST)
+	e.POST("/test", handlers.TESTJSON)
+	e.GET("/search", handlers.Search_GET)
 	e.GET("/login", handlers.Login_GET)
+	e.POST("/addgame", handlers.CreateGame_POST)
 	e.POST("/login", handlers.Login_POST)
 	e.POST("/register", handlers.Register_POST)
 	e.POST("/logout", handlers.Logout_POST)
+	e.GET("/hx-questionEntry", handlers.Hx_questionEntry)
+	e.GET("/hx-create", handlers.Hx_createGame)
 	port := fmt.Sprintf(":%v", os.Getenv("APP_PORT"))
 	e.Logger.Fatal(e.Start(port))
 }

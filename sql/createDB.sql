@@ -12,6 +12,8 @@ CREATE TABLE IF NOT EXISTS customer (
 CREATE TABLE IF NOT EXISTS question (
   id int PRIMARY KEY AUTO_INCREMENT,
   title varchar(64) NOT NULL,
+  quiz_id int NOT NULL,
+  FOREIGN KEY (quiz_id) REFERENCES quiz (id) 
 ) ;
 
 CREATE TABLE IF NOT EXISTS question_choice  (
