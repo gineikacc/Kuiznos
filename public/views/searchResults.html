@@ -1,5 +1,5 @@
 {{define "searchResults"}}
-  <h3 id="tableTitle">Query</h3>
+  <h4 id="tableTitle">Quizzes available</h4>
   <table>
     <thead>
       <th>Title</th>
@@ -11,7 +11,7 @@
       <tr>
         <td>{{ .Title }}</td>
         <td>{{ .Author }}</td>
-        <td><button hx-get="play" hx-target="#content"  hx-swap="innerHTML" hx-on::after-request="startGame()" onclick="loadGame('{{ .Title }}')">Play</button></td>
+        <td><button hx-get="play" hx-target="#content"  hx-swap="innerHTML" onclick="loadGame('{{ .Title }}')">Play</button></td>
       </tr>
       {{end}}
     </tbody>
